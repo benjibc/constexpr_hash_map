@@ -63,8 +63,7 @@ template<> struct N_increasing_indices<0> {
 ///////////////////////////////////////////////////////////////////////////
 // checks for the equality of two strings, constexpr version using recursion
 constexpr bool equal(const char* x, const char * y) {
-    return (x == 0 || y == 0)? false :
-        (*x == 0 && *y == 0)? true : (*x == *y) ? equal(x+1, y+1) : false;
+    return (*x == 0 && *y == 0)? true : (*x == *y) ? equal(x+1, y+1) : false;
 }
 
 // hash the string using FNV1 algorithm
@@ -417,6 +416,32 @@ struct StaticHashMap {
                T2();
     }
 
+    // the non-const version for getting the item in the hash map.
+    // recommended for runtime use as this is much faster than the recursion
+    // version above
+    T2 getVal(TKey key1) const
+    {
+        TKey key = key1;
+        unsigned int hash = 2166136261u;
+        if(key == NULL)
+            return T2();
+        while(*key != '\0')
+        {
+            hash *= 16777619;
+            hash ^= *key; 
+            key++;
+        }
+        hash = hash % bucketSize;
+        TKey first = m_hash_lvl1[hash].first;
+        if(first == NULL)
+            return T2();
+        if(strcmp(key1, first) == 0)
+            return m_hash_lvl1[hash].second;
+        TKey second = m_hash_lvl2[hash].first;
+        if(strcmp(key1, second) == 0)
+            return m_hash_lvl2[hash].second;
+        return T2();
+    }
     constexpr unsigned int size() const {
         return m_size;
     }

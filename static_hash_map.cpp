@@ -24,6 +24,7 @@
 // This is the unit testing program for static_hash_map.hpp
 
 #include "./static_hash_map.h"
+#include <iostream>
 
 int main()
 {
