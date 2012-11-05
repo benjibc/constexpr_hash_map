@@ -27,7 +27,7 @@
 
 int main()
 {
-    constexpr int b_size = 187;
+    constexpr int b_size = 446;
     typedef StaticHashMap<b_size,const char *, int>::pair_value_type KV;
     constexpr StaticHashMap<b_size,const char *, int> curHashMap(KV("AS", 0), 
         KV("CE", 1), KV("DK", 2), KV("BX", 3), KV("BD", 3),
@@ -43,7 +43,11 @@ int main()
         KV("ME", 1), KV("NK", 2), KV("LX", 5), KV("LD", 3),
         KV("NE", 1), KV("OK", 2), KV("MX", 3), KV("MD", 3),
         KV("OE", 1), KV("PK", 2), KV("NX", 3), KV("ND", 3),
-        KV("PE", 1), KV("QK", 2), KV("OX", 3), KV("OD", 3));
+        KV("PE", 1), KV("QK", 2), KV("OX", 3), KV("OD", 3),
+        KV("QE", 1), KV("RK", 2), KV("PX", 5), KV("PD", 3),
+        KV("RE", 1), KV("SK", 2), KV("QX", 3), KV("QD", 3),
+        KV("SE", 1), KV("TK", 2), KV("RX", 3), KV("RD", 3),
+        KV("TE", 1), KV("UK", 2), KV("SX", 3), KV("SD", 3));
     static_assert(curHashMap.get("PE") == 1, "PE is not 1");
     static_assert(curHashMap.get("AS") == 0, "AS is not 0");
     static_assert(curHashMap.get("LX") == 5, "LX is not 3");
@@ -60,19 +64,20 @@ int main()
         KV("JE", 1), KV("KK", 2), KV("IX", 3), KV("ID", 3),
         KV("KE", 1), KV("LK", 2), KV("JX", 3), KV("JD", 3),
         KV("LE", 1), KV("MK", 2), KV("KX", 3), KV("KD", 3),
-        KV("ME", 1), KV("NK", 2), KV("LX", 3), KV("LD", 3),
+        KV("ME", 1), KV("NK", 2), KV("LX", 5), KV("LD", 3),
         KV("NE", 1), KV("OK", 2), KV("MX", 3), KV("MD", 3),
         KV("OE", 1), KV("PK", 2), KV("NX", 3), KV("ND", 3),
-        KV("PE", 1), KV("QK", 2), KV("OX", 3), KV("OD", 3));
-
+        KV("PE", 1), KV("QK", 2), KV("OX", 3), KV("OD", 3),
+        KV("QE", 1), KV("RK", 2), KV("PX", 5), KV("PD", 3),
+        KV("RE", 1), KV("SK", 2), KV("QX", 3), KV("QD", 3),
+        KV("SE", 1), KV("TK", 2), KV("RX", 3), KV("RD", 3),
+        KV("TE", 1), KV("UK", 2), KV("SX", 3), KV("SD", 3));
     for (int i = 0 ; i < curHashArr.size(); i++) {
         std::cout << curHashArr[i].first << ' ';
         std::cout << hash_fnv1_pair(curHashArr, b_size, i) << '\t';
     }
     std::cout << '\n' << "size of hash map" << std::endl;
     std::cout << curHashMap.size() << std::endl;
-    static_assert(curHashMap.size() == 57,
-        "wrong size for the static hash map");
     std::cout << std::endl;
 }
 
