@@ -1,6 +1,6 @@
 constexpr_hash_map
 ===============
-
+# please make sure you compile this code with the latest GCC
 Constexpr hash map, generates a constant KV hash map at compile time.
 
 This is part of the bigger project that I am working on, called Basic Model
