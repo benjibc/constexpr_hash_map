@@ -28,6 +28,10 @@
 #include <array>
 #include <utility>
 
+// used to incrementally find the smallest size allowed for the bucket
+constexpr int B_INCREMENTOR = 27;
+constexpr int B_STARTER = 11;
+
 ///////////////////////////////////////////////////////////////////////////
 // list of integer from 0 to N begin. Similar to the range function in python
 // This code is copied from D.Abraham's github; Please visit:
@@ -180,12 +184,20 @@ const unsigned int allowedNumColl = 2, int cur = 0, int numCollision = 0) {
         cur == 0 ?
             check_collision(arr, bucketSize, allowedNumColl, cur+1, 0):
          (numCollision == allowedNumColl) ?
-            (throw std::logic_error("More than 2 collision")) :
+            //(throw std::logic_error("More than 2 collision")) :
+            false :
         (hash_fnv1_pair(arr, bucketSize, cur) ==
             hash_fnv1_pair(arr, bucketSize, cur-1)) ?
             check_collision(arr, bucketSize, allowedNumColl,
                 cur+1, numCollision +1) :
             check_collision(arr, bucketSize, allowedNumColl, cur+1, 0);
+}
+
+template<class Arr>
+constexpr unsigned int 
+    findSmallestBSize (const Arr arr, const unsigned int bucketSize) {
+    return check_collision(arr, bucketSize) ? bucketSize :
+        check_collision(arr, bucketSize + 31);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -257,6 +269,16 @@ HWithArr(int N, const unsigned int bucket, const T t, const T2 mini,
         : compareHash(mini.first, u0.first, bucket)
           ? HWithArr<D, T2>(N+1, bucket,  t, mini, u..., u0  )
           : HWithArr<D, T2>(N+1, bucket,  t, u0,   u..., mini);
+}
+
+template<class T3, class ...U> 
+//constexpr std::array<T3, sizeof...(U)>
+constexpr unsigned int
+findMinBSize(unsigned int bucket, U... u)
+{
+    return check_collision(HWithArr<sizeof...(U), T3>(0, bucket, std::array<T3, 0>(), u...), bucket) 
+    ? bucket 
+    : findMinBSize<T3>(bucket + B_INCREMENTOR, u...); 
 }
 
 
@@ -372,8 +394,6 @@ struct StaticHashMap {
     template<class...U>
     constexpr StaticHashMap(U...u) :
         m_size(sizeof...(U)),
-        m_fitAll(check_collision(Hash_sorted_array<_Pair>(bucketSize, u...),
-            bucketSize, 2, 0, 0)),
         m_hash_lvl1(HashMapCreate<bucketSize>(
             Hash_sorted_array<_Pair>(bucketSize, u...), 0)),
         m_hash_lvl2(HashMapCreate<bucketSize>(
@@ -454,7 +474,6 @@ struct StaticHashMap {
     std::array<_Pair, bucketSize> m_hash_lvl2;
     // if both hash map can fit the array, this member variable will be
     // initialized successfully
-    bool m_fitAll;
 };
 
 #endif  // STATIC_HASH_MAP_H_
