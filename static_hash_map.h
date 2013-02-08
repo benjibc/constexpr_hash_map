@@ -25,6 +25,12 @@
 #ifndef STATIC_HASH_MAP_H_
 #define STATIC_HASH_MAP_H_
 
+// macro definiton for the creation of the map
+// first argument being the name
+#define CREATE_HASHMAP(name, ...) \
+    constexpr StaticHashMap<findMinBSize<KV>(B_STARTER, __VA_ARGS__),\
+                      KV> name (__VA_ARGS__)
+
 #include <array>
 #include <utility>
 
@@ -258,6 +264,7 @@ HWithArr(int N, const unsigned int bucket, T t, T2 mini) {
 // Will probably not improve on this using merge sort because:
 // 1.This static hash map will have to be typed up manually, so even with
 //  Vim's recording ability, programmer will not type in millions of entry
+// 2.Cost of type inference for the merge sort is heavy
 template<int D, class T2, class T, class...U>
 constexpr std::array<T2, D>
 HWithArr(int N, const unsigned int bucket, const T t, const T2 mini,
@@ -276,7 +283,8 @@ template<class T3, class ...U>
 constexpr unsigned int
 findMinBSize(unsigned int bucket, U... u)
 {
-    return check_collision(HWithArr<sizeof...(U), T3>(0, bucket, std::array<T3, 0>(), u...), bucket) 
+    return check_collision(HWithArr<sizeof...(U), T3>
+    (0, bucket, std::array<T3, 0>(), u...), bucket) 
     ? bucket 
     : findMinBSize<T3>(bucket + B_INCREMENTOR, u...); 
 }
@@ -330,7 +338,7 @@ constexpr unsigned int hashCollisionLevel(const Arr arr, unsigned int i,
             1:0;
 }
 
-// improvement on this function:
+// future improvement on this function:
 // Assume uniform distribution, get a rough indication of the array index
 // by hash/bucketSize, and wind back until arr[i] => hashVal
 template<class Pair, class Arr>
@@ -373,22 +381,25 @@ constexpr auto getHashPair(const Arr arr, unsigned int bucketSize,
 // element in the hash sorted array
 ///////////////////////////////////////////////////////////////////////////
 
-template<int bucketSize, class TKey, class T2>
+template<class TKey, class T2>
+struct _Pair {
+    typedef TKey key_type;
+    typedef T2   value_type;
+    TKey first;
+    T2 second;
+    bool empty;
+    constexpr _Pair() : first(TKey()), second(T2()), empty(true) {}
+    constexpr _Pair(TKey val) : first(val), second(T2()), empty(false) {}
+    constexpr _Pair(T2 val) : first(TKey()), second(val), empty(false) {}
+    constexpr _Pair(TKey val1, T2 val2) :
+        first(val1), second(val2), empty(false) {}
+};
+
+template<int bucketSize, class _Pair>
 struct StaticHashMap {
     // Pair for the hashmap
-    typedef TKey key_type;
-    typedef T2 value_type;
-    struct _Pair {
-        TKey first;
-        T2 second;
-        bool empty;
-        constexpr _Pair() : first(TKey()), second(T2()), empty(true) {}
-        constexpr _Pair(TKey val) : first(val), second(T2()), empty(false) {}
-        constexpr _Pair(T2 val) : first(TKey()), second(val), empty(false) {}
-        constexpr _Pair(TKey val1, T2 val2) :
-            first(val1), second(val2), empty(false) {}
-    };
-    typedef _Pair pair_value_type;
+    typedef typename _Pair::key_type TKey;
+    typedef typename _Pair::value_type T2; 
 
     // constructor
     template<class...U>
