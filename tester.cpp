@@ -34,11 +34,12 @@ int main()
     typedef _Pair<const char *, int> KV;
     // initialization through macro for convenience
     // first argument is the name of the hashmap
+    // second argument is the type of the element
     // expands into
     // constexpr StaticHashMap<size, KV> curHashMap = (...)
     // requires the type KV to be declared this way
     CREATE_HASHMAP(
-        curHashMap, KV("AS", 0), 
+        curHashMap, KV, KV("AS", 0), 
         KV("CE", 1), KV("DK", 2), KV("BX", 3), KV("BD", 3),
         KV("DE", 1), KV("EK", 2), KV("CX", 3), KV("CD", 3),
         KV("EE", 1), KV("FK", 2), KV("DX", 3), KV("DD", 3),

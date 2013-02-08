@@ -27,9 +27,9 @@
 
 // macro definiton for the creation of the map
 // first argument being the name
-#define CREATE_HASHMAP(name, ...) \
-    constexpr StaticHashMap<findMinBSize<KV>(B_STARTER, __VA_ARGS__),\
-                      KV> name (__VA_ARGS__)
+#define CREATE_HASHMAP(name, ptype, ...) \
+    constexpr StaticHashMap<findMinBSize<ptype>(B_STARTER, __VA_ARGS__),\
+                      ptype> name (__VA_ARGS__)
 
 #include <array>
 #include <utility>

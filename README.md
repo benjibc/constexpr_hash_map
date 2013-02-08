@@ -19,4 +19,4 @@ enables things to be evaluated at compile time, so the hash map will be copied
 into memory while the program is initialized, minimizing the overhead for 
 hash_map creation. This is useful also for rtti system solution if one does
 not desire QObject that comes with a rather large overhead which aims to solve
-a lot of problems.
+a lot of problems
