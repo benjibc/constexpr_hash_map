@@ -1,21 +1,3 @@
-//  Copyright [2012] <Yufei (Benny) Chen>
-//  This file is part of BHMVC.
-
-//  BHMVC is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-
-//  BHMVC is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-
-//  You should have received a copy of the GNU General Public License
-//  along with BHMVC.  If not, see <http://www.gnu.org/licenses/>.
-
-// OK end of the legal message with GPL.
-//
 // I have separated different modules of BHMVC in several different but useful
 // libraries that the user may use at free will.
 //
